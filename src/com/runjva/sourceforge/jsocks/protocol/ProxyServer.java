@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NoRouteToHostException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -343,7 +344,9 @@ public class ProxyServer implements Runnable {
 		Socket s;
 
 		if (proxy == null) {
-			s = new Socket(msg.ip, msg.port);
+			s = new Socket();
+			s.bind(new InetSocketAddress(sock.getLocalAddress().getHostAddress(),0));
+			s.connect(new InetSocketAddress(msg.ip, msg.port));
 		} else {
 			s = new SocksSocket(proxy, msg.ip, msg.port);
 		}
